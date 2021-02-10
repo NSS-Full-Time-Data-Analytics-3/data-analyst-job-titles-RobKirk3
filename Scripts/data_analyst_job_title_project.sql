@@ -88,9 +88,15 @@ FROM data_analyst_jobs
 WHERE review_count > 5000
 ORDER BY star_rating DESC;
 /*Several have 4.199999809:
-Microsoft (several), Kaiser Permanente (several), American Express (several), Nike (several), Unilever, General Motors
+Many instances: Microsoft, Kaiser Permanente, American Express, Nike  
+Single instance: Unilever, General Motors*/
 
 --11 Find all the job titles that contain the word ‘Analyst’. How many different job titles are there?
+SELECT COUNT(DISTINCT(title))
+FROM data_analyst_jobs
+WHERE title ILIKE '%analyst%';
+--774
+-- Take COUNT out to see what the titles are!
 
 /*12 How many different job titles do not contain either the word ‘Analyst’ or the word ‘Analytics’? 
 What word do these positions have in common?*/
