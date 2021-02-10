@@ -48,16 +48,47 @@ ORDER BY avg_rating;
 
 
 --7. Select unique job titles from the data_analyst_jobs table. How many are there?
+SELECT COUNT(DISTINCT(title))
+FROM data_analyst_jobs;
+--881
 
 --8 How many unique job titles are there for California companies?
+SELECT COUNT(DISTINCT(title)), location
+FROM data_analyst_jobs
+WHERE location ='CA'
+GROUP BY location;
+-- 230
 
 /*9 Find the name of each company 
-and its average star rating for all companies that have more than 5000 reviews across all locations. 
-How many companies are there with more that 5000 reviews across all locations?*/
+and its average star rating 
+for all companies that have more than 5000 reviews 
+across all locations. 
+How many companies are there with more than 5000 reviews across all locations?*/
+SELECT company, star_rating, review_count, location
+FROM data_analyst_jobs
+WHERE review_count > 5000;
+/*works, have duplicate company names but they all have different locations/
+I think this is what the question is asking? 
+according to this there are 185 companies (got by scrolling down)
+Is it asking for how many total companies? or how many unique companies? 2 part question?*/
+SELECT COUNT(DISTINCT(company))
+FROM data_analyst_jobs
+WHERE review_count > 5000
+GROUP BY company;
+/*no idea how to interpret what this is returning. 40 rows return "1", 1 row returns "0".
+Perhaps there are 40 unique companies? Moving on...*/
+
+
 
 /*10 Add the code to order the query in #9 from highest to lowest average star rating. 
 Which company with more than 5000 reviews across all locations in the dataset has the highest star rating? 
 What is that rating?*/
+SELECT company, star_rating, review_count, location
+FROM data_analyst_jobs
+WHERE review_count > 5000
+ORDER BY star_rating DESC;
+/*Several have 4.199999809:
+Microsoft (several), Kaiser Permanente (several), American Express (several), Nike (several), Unilever, General Motors
 
 --11 Find all the job titles that contain the word ‘Analyst’. How many different job titles are there?
 
