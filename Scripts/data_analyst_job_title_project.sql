@@ -98,8 +98,15 @@ WHERE title ILIKE '%analyst%';
 --774
 -- Take COUNT out to see what the titles are!
 
+
 /*12 How many different job titles do not contain either the word ‘Analyst’ or the word ‘Analytics’? 
 What word do these positions have in common?*/
+SELECT DISTINCT(title)
+FROM data_analyst_jobs
+WHERE title NOT ILIKE '%analy%';
+--4
+--Tableau
+
 
 /*BONUS: You want to understand which jobs requiring SQL are hard to fill. 
 Find the number of jobs by industry (domain) that require SQL and have been posted longer than 3 weeks.
@@ -107,3 +114,24 @@ Find the number of jobs by industry (domain) that require SQL and have been post
 	- Order your results so that the domain with the greatest number of hard to fill jobs is at the top.
 	- Which three industries are in the top 4 on this list? 
 	  How many jobs have been listed for more than 3 weeks for each of the top 4?*/
+SELECT *
+FROM data_analyst_jobs
+WHERE skill ILIKE '%SQL%'
+AND days_since_posting > 21
+--made sure this worked first. 619 results. Time to refine!
+AND domain IS NOT NULL;
+--adding domain took it down to 403. Now that this works its time to tweak further
+
+SELECT COUNT(DISTINCT(title)) AS hard_to_fill_jobs, domain
+FROM data_analyst_jobs
+WHERE skill ILIKE '%SQL%'
+AND days_since_posting > 21
+AND domain IS NOT NULL
+GROUP BY domain
+ORDER BY hard_to_fill_jobs DESC;
+/*Which 3 industries in top 4? How many jobs each?
+Internet and Software - 42
+Health Care - 40
+Banks and Financial Services - 38
+Consulting and Business Services - 31
+*/
