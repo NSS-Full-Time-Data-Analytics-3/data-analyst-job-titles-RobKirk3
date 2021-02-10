@@ -31,7 +31,7 @@ AND star_rating > 4;
 --3
 
 --5. How many postings in the dataset have a review count between 500 and 1000?
-SELECT DISTINCT COUNT(*)
+SELECT COUNT(*)
 FROM data_analyst_jobs
 WHERE review_count BETWEEN 500 AND 1000;
 --151
@@ -78,6 +78,13 @@ GROUP BY company;
 /*no idea how to interpret what this is returning. 40 rows return "1", 1 row returns "0".
 Perhaps there are 40 unique companies? Moving on...*/
 
+--here is the correct approach. As I suspected, 40 unique companies
+SELECT company, AVG(star_rating) AS avg_rating
+FROM data_analyst_jobs
+WHERE review_count > '5000'
+AND company IS NOT NULL
+GROUP BY company;
+
 
 
 /*10 Add the code to order the query in #9 from highest to lowest average star rating. 
@@ -90,6 +97,15 @@ ORDER BY star_rating DESC;
 /*Several have 4.199999809:
 Many instances: Microsoft, Kaiser Permanente, American Express, Nike  
 Single instance: Unilever, General Motors*/
+
+select company, avg(star_rating) as ratings
+from data_analyst_jobs
+where review_count > 5000
+and company is not null
+and star_rating is not null
+group by company
+order by ratings desc;
+
 
 --11 Find all the job titles that contain the word ‘Analyst’. How many different job titles are there?
 SELECT COUNT(DISTINCT(title))
@@ -125,8 +141,8 @@ AND domain IS NOT NULL;
 SELECT COUNT(DISTINCT(title)) AS hard_to_fill_jobs, domain
 FROM data_analyst_jobs
 WHERE skill ILIKE '%SQL%'
-AND days_since_posting > 21
-AND domain IS NOT NULL
+	AND days_since_posting > 21
+	AND domain IS NOT NULL
 GROUP BY domain
 ORDER BY hard_to_fill_jobs DESC;
 /*Which 3 industries in top 4? How many jobs each?
@@ -135,3 +151,25 @@ Health Care - 40
 Banks and Financial Services - 38
 Consulting and Business Services - 31
 */
+
+--Valencia's code
+SELECT DISTINCT(domain) AS industry,
+	COUNT(title) AS num_of_hard_to_fill_jobs,
+	MAX(skill) AS skill,
+	AVG(days_since_posting) AS days_since_posting
+FROM data_analyst_jobs
+WHERE domain IS NOT NULL
+	AND skill LIKE '%SQL%'
+	AND days_since_posting > 21
+GROUP BY domain
+ORDER BY num_of_hard_to_fill_jobs DESC;
+
+--Mahesh's code
+SELECT domain, COUNT(title) AS job_count
+FROM data_analyst_jobs
+WHERE UPPER(skill) LIKE '%SQL%'
+AND days_since_posting > 21
+AND domain IS NOT NULL
+GROUP BY domain
+ORDER BY job_count DESC;
+--almost identical to mine, but removing DISTINCT from my title column. Returns more jobs, but top 4 industries remain the same
